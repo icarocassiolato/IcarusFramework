@@ -34,7 +34,6 @@ type
     procedure AtribuirEventos;
   protected
     FControle: TControle;
-    FClasseAtual: TPersistentClass;
     procedure StateChange(Sender: TObject); virtual;
     procedure AfterScroll(DataSet: TDataSet); virtual;
   end;
