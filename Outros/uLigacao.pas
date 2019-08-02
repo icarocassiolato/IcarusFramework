@@ -15,12 +15,13 @@ type
       TExpressionList = TObjectList<TBindingExpression>;
   private
     FBindings: TExpressionList;
+    FOwner: TObject;
     procedure OnChangeTracking(Sender: TObject);
   protected
     procedure Notify(const APropertyName: string = '');
     property Bindings: TExpressionList read FBindings;
   public
-    constructor Create; virtual;
+    constructor Create(poOwner: TObject);
     destructor Destroy; override;
     procedure Ligar(const AProperty: string; const ABindToObject: TObject;
         const ABindToProperty: string; const ACreateOptions:
@@ -33,9 +34,9 @@ implementation
 uses
   SysUtils;
 
-constructor TLigacao.Create;
+constructor TLigacao.Create(poOwner: TObject);
 begin
-  inherited;
+  FOwner := poOwner;
   FBindings := TExpressionList.Create(False);
 end;
 
@@ -63,7 +64,7 @@ var
   oExpressaoVolta: TBindingExpression;
 begin
   oExpressaoIda := TBindings.CreateManagedBinding(
-    [TBindings.CreateAssociationScope([Associate(Self, 'src')])], 'src.' + AProperty,
+    [TBindings.CreateAssociationScope([Associate(FOwner, 'src')])], 'src.' + AProperty,
     [TBindings.CreateAssociationScope([Associate(ABindToObject, 'dst')])], 'dst.' + ABindToProperty,
     nil, nil, ACreateOptions);
 
@@ -77,7 +78,7 @@ begin
 
   oExpressaoVolta := TBindings.CreateManagedBinding(
     [TBindings.CreateAssociationScope([Associate(ABindToObject, 'src')])], 'src.' + ABindToProperty,
-    [TBindings.CreateAssociationScope([Associate(Self, 'dst')])], 'dst.' + AProperty,
+    [TBindings.CreateAssociationScope([Associate(FOwner, 'dst')])], 'dst.' + AProperty,
     nil, nil, ACreateOptions);
 
   FBindings.Add(oExpressaoVolta);
@@ -96,7 +97,7 @@ end;
 
 procedure TLigacao.Notify(const APropertyName: string);
 begin
-  TBindings.Notify(Self, APropertyName);
+  TBindings.Notify(FOwner, APropertyName);
 end;
 
 end.

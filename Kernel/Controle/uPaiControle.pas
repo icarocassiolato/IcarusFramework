@@ -2,35 +2,38 @@ unit uPaiControle;
 
 interface
 
+
+{    for caAtributo in rpPropriedade.GetAttributes do
+      if caAtributo is TCampoTabelaExterna then
+        fCampo.ProviderFlags := fCampo.ProviderFlags + [pfInUpdate];}
+
 uses
-  uConexaoBanco, uLigacao,
+  uConexaoBanco, uLigacao, uConstrutorSQL, uAtributosCustomizados,
   SysUtils, Classes, Variants, uRESTDWPoolerDB, Data.DB;
 
 type
-  TTipoOperacao = (toPreencherDataSet, toPreencherPropriedades, toCriarLink);
-
-  TControle = class(TLigacao)
+  TControle = class(TRESTDWClientSQL)
   private
     FDataSource: TDataSource;
-    FQuery: TRESTDWClientSQL;
     FFormulario: TComponent;
-    procedure VarrerPropriedades(pTipoOperacao: TTipoOperacao);
-    procedure AfterScroll(DataSet: TDataSet);
-    procedure BeforePost(DataSet: TDataSet);
+    FLigacao: TLigacao;
+    procedure OnAfterScroll(DataSet: TDataSet);
+    procedure OnBeforePost(DataSet: TDataSet);
     procedure AbrirQuery(psWhere: string = '');
     procedure CriarLigacao(psNomePropriedade: string);
-    function FormatarSQL(psWhere: string = ''): string;
     function WhereCodigo(pnCodigo: integer): string;
     function LigarComponente(psPrefixoComponente, psPropriedadeComponente,
       psNomeCampo: string): boolean;
+    procedure PreencherDataSet;
+    procedure PreencherPropriedades;
+    procedure DesabilitarCamposTabelaSecundaria(pslCampos: TStringList);
   protected
     FTabela: string;
   public
     constructor Create(poFormulario: TComponent); overload;
     constructor Create(pnCodigo: integer); overload;
     destructor Destroy; override;
-    procedure PesquisarPorCodigo(pnCodigo: integer);
-    property Query: TRESTDWClientSQL read FQuery write FQuery;
+    procedure PesquisarPorCodigo(pnCodigoAntigo, pnCodigoNovo: integer);
     property DataSource: TDataSource read FDataSource write FDataSource;
 end;
 
@@ -43,17 +46,18 @@ uses
 
 constructor TControle.Create(pnCodigo: integer);
 begin
-  inherited Create;
+  inherited Create(nil);
   FTabela := ClassName.Substring(1);
 
-  FQuery := TRESTDWClientSQL.Create(nil);
-  FQuery.DataBase := TConexaoBanco.GetInstance.Conexao;
-  FQuery.UpdateTableName := FTabela;
-  FQuery.AfterScroll := AfterScroll;
-  FQuery.BeforePost := BeforePost;
+  DataBase := TConexaoBanco.GetInstance.Conexao;
+  UpdateTableName := FTabela;
+  AfterScroll := OnAfterScroll;
+  BeforePost := OnBeforePost;
 
   FDataSource := TDataSource.Create(nil);
-  FDataSource.DataSet := FQuery;
+  FDataSource.DataSet := Self;
+
+  FLigacao := TLigacao.Create(Self);
 
   if (pnCodigo > 0) or not Assigned(FFormulario) then
     AbrirQuery(WhereCodigo(pnCodigo))
@@ -72,37 +76,53 @@ begin
   if Assigned(FDataSource) then
     FreeAndNil(FDataSource);
 
-  FreeAndNil(FQuery);
-
+  FreeAndNil(FLigacao);
   inherited;
 end;
 
-procedure TControle.AfterScroll(DataSet: TDataSet);
+procedure TControle.OnAfterScroll(DataSet: TDataSet);
 begin
-  inherited;
-  VarrerPropriedades(toPreencherPropriedades);
+  PreencherPropriedades;
 end;
 
-procedure TControle.BeforePost(DataSet: TDataSet);
+procedure TControle.OnBeforePost(DataSet: TDataSet);
 begin
-  inherited;
-  VarrerPropriedades(toPreencherDataSet);
+  PreencherDataSet;
 end;
 
-function TControle.FormatarSQL(psWhere: string = ''): string;
+procedure TControle.DesabilitarCamposTabelaSecundaria(pslCampos: TStringList);
+var
+  i: Integer;
+  oCampo: TField;
+  sNomeCampo: string;
 begin
-  Result := Format('SELECT * FROM %s ', [FTabela]);
-  if psWhere.Length > 0 then
-    Result := Result + ' WHERE ' + psWhere;
+  for i := 0 to Pred(pslCampos.Count) do
+  begin
+    sNomeCampo := pslCampos[i].Substring(pslCampos[i].LastDelimiter(' ') + 1);
+    oCampo := FindField(sNomeCampo);
+    if Assigned(oCampo) then
+      oCampo.ProviderFlags := [];
+  end;
 end;
 
 procedure TControle.AbrirQuery(psWhere: string = '');
+var
+  FConstrutorSQL: TConstrutorSQL;
 begin
-  if FQuery.Active then
-    FQuery.Close;
+  FConstrutorSQL := TConstrutorSQL.Create;
+  try
+    FConstrutorSQL.Construir(Self);
+    FConstrutorSQL.Condicoes.Text := psWhere;
 
-  FQuery.Open(FormatarSQL(psWhere));
-  FQuery.First;
+    if Active then
+      Close;
+
+    Open(FConstrutorSQL.SQLGerado);
+    First;
+    DesabilitarCamposTabelaSecundaria(FConstrutorSQL.CamposTabelaSecundaria);
+  finally
+    FreeAndNil(FConstrutorSQL);
+  end;
 end;
 
 function TControle.WhereCodigo(pnCodigo: integer): string;
@@ -110,42 +130,48 @@ begin
   Result := 'ID' + FTabela + ' = ' + VarToStr(pnCodigo);
 end;
 
-procedure TControle.PesquisarPorCodigo(pnCodigo: integer);
+procedure TControle.PesquisarPorCodigo(pnCodigoAntigo, pnCodigoNovo: integer);
 begin
-  AbrirQuery(WhereCodigo(pnCodigo));
-  VarrerPropriedades(toPreencherPropriedades);
+  if pnCodigoAntigo <> pnCodigoNovo then
+    AbrirQuery(WhereCodigo(pnCodigoNovo));
 end;
 
-procedure TControle.VarrerPropriedades(pTipoOperacao: TTipoOperacao);
+procedure TControle.PreencherPropriedades;
 var
   Ctx: TRttiContext;
   rpPropriedade: TRttiProperty;
   fCampo: TField;
 begin
-  Ctx := TRttiContext.Create;
-  try
-    for rpPropriedade in Ctx.GetType(Self.ClassType).GetDeclaredProperties do
-    begin
-      fCampo := FQuery.FindField(rpPropriedade.Name);
+  for rpPropriedade in Ctx.GetType(Self.ClassType).GetDeclaredProperties do
+  begin
+    fCampo := FindField(rpPropriedade.Name);
 
-      if fCampo = nil then
-        continue;
+    if fCampo = nil then
+      continue;
 
-      case pTipoOperacao of
-        toPreencherPropriedades: begin
-          //se não é FK
-          if (rpPropriedade.GetValue(Self).Kind = tkUnknown) then
-            continue;
+    if (rpPropriedade.GetValue(Self).Kind = tkClass) then
+      continue;
 
-          rpPropriedade.SetValue(Self, TValue.FromVariant(fCampo.Value));
-          //passar só uma vez
-          CriarLigacao(rpPropriedade.Name);
-        end;
-        toPreencherDataSet: fCampo.Value := rpPropriedade.GetValue(Self).AsVariant;
-      end;
-    end;
-  finally
-    Ctx.Free;
+    rpPropriedade.SetValue(Self, TValue.FromVariant(fCampo.Value));
+    //passar só uma vez
+    CriarLigacao(rpPropriedade.Name);
+  end;
+end;
+
+procedure TControle.PreencherDataSet;
+var
+  Ctx: TRttiContext;
+  rpPropriedade: TRttiProperty;
+  fCampo: TField;
+begin
+  for rpPropriedade in Ctx.GetType(Self.ClassType).GetDeclaredProperties do
+  begin
+    fCampo := FindField(rpPropriedade.Name);
+
+    if fCampo = nil then
+      continue;
+
+    fCampo.Value := rpPropriedade.GetValue(Self).AsVariant;
   end;
 end;
 
@@ -159,7 +185,7 @@ begin
   if not Assigned(oComponent) then
     Exit;
 
-  Ligar(psNomeCampo, oComponent, psPropriedadeComponente);
+  FLigacao.Ligar(psNomeCampo, oComponent, psPropriedadeComponente);
   Result := True;
 end;
 

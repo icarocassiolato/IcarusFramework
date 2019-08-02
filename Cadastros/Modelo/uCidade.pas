@@ -42,8 +42,7 @@ begin
   if FEstado = nil then
     FEstado := TEstado.Create(FIdEstado)
   else
-    if FEstado.IdEstado <> FIdEstado then
-      FEstado.PesquisarPorCodigo(FIdEstado);
+    FEstado.PesquisarPorCodigo(FEstado.IdEstado, FIdEstado);
 
   Result := FEstado;
 end;

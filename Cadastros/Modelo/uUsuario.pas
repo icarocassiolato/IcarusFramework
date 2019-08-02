@@ -3,7 +3,7 @@ unit uUsuario;
 interface
 
 uses
-  uPaiControle, uCidade;
+  uPaiControle, uCidade, uAtributosCustomizados;
 
 type
   TUsuario = class(TControle)
@@ -22,6 +22,8 @@ type
       property Email: string read FEmail write FEmail;
       property Nome: string read FNome write FNome;
       property IdCidade: integer read FIdCidade write FIdCidade;
+      [TCampoTabelaExterna('NOME')]
+      [TCampoTabelaExterna('IDESTADO')]
       property Cidade: TCidade read GetCidade;
     end;
 
@@ -45,8 +47,7 @@ begin
   if FCidade = nil then
     FCidade := TCidade.Create(FIdCidade)
   else
-    if FCidade.IdCidade <> FIdCidade then
-      FCidade.PesquisarPorCodigo(FIdCidade);
+    FCidade.PesquisarPorCodigo(FCidade.IdCidade, FIdCidade);
 
   Result := FCidade;
 end;

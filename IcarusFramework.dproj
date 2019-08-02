@@ -101,6 +101,8 @@
         <DCCReference Include="Cadastros\Visual\uUsuarioVisual.pas">
             <Form>UsuarioFrm</Form>
         </DCCReference>
+        <DCCReference Include="Outros\uConstrutorSQL.pas"/>
+        <DCCReference Include="Outros\uAtributosCustomizados.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

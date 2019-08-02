@@ -64,8 +64,8 @@ end;
 
 procedure TPaiFrm.AtribuirEventos;
 begin
-  FAfterScroll := FControle.Query.AfterScroll;
-  FControle.Query.AfterScroll := AfterScroll;
+  FAfterScroll := FControle.AfterScroll;
+  FControle.AfterScroll := AfterScroll;
 
   FStateChange := FControle.DataSource.OnStateChange;
   FControle.DataSource.OnStateChange := StateChange;
@@ -91,22 +91,22 @@ end;
 procedure TPaiFrm.OnClick(Sender: TObject);
 begin
   case TTipoAcao(TRectangle(Sender).Tag) of
-    taIncluir: FControle.Query.Insert;
-    taAlterar: FControle.Query.Edit;
-    taCancelar: FControle.Query.Cancel;
+    taIncluir: FControle.Insert;
+    taAlterar: FControle.Edit;
+    taCancelar: FControle.Cancel;
     taSalvar: begin
-      FControle.Query.Post;
-      if FControle.Query.MassiveCount > 0 then
-        FControle.Query.ApplyUpdates;
+      FControle.Post;
+      if FControle.MassiveCount > 0 then
+        FControle.ApplyUpdates;
     end;
     taDeletar: begin
-      FControle.Query.Delete;
-      FControle.Query.ApplyUpdates;
+      FControle.Delete;
+      FControle.ApplyUpdates;
     end;
-    taPrimeiro: FControle.Query.First;
-    taAnterior: FControle.Query.Prior;
-    taProximo: FControle.Query.Next;
-    taUltimo: FControle.Query.Last;
+    taPrimeiro: FControle.First;
+    taAnterior: FControle.Prior;
+    taProximo: FControle.Next;
+    taUltimo: FControle.Last;
   end;
 end;
 
@@ -114,7 +114,7 @@ procedure TPaiFrm.HabilitarEdicao(pbInserindoEditando: boolean);
 var
   bInserindoEditandoVazio: boolean;
 begin
-  bInserindoEditandoVazio := pbInserindoEditando or FControle.Query.IsEmpty;
+  bInserindoEditandoVazio := pbInserindoEditando or FControle.IsEmpty;
 
   BtnIncluir.Enabled := not pbInserindoEditando;
   BtnAlterar.Enabled := not bInserindoEditandoVazio;

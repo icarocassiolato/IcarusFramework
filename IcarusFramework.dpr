@@ -10,7 +10,9 @@ uses
   uUsuario in 'Cadastros\Modelo\uUsuario.pas',
   uCidade in 'Cadastros\Modelo\uCidade.pas',
   uEstado in 'Cadastros\Modelo\uEstado.pas',
-  uUsuarioVisual in 'Cadastros\Visual\uUsuarioVisual.pas' {UsuarioFrm};
+  uUsuarioVisual in 'Cadastros\Visual\uUsuarioVisual.pas' {UsuarioFrm},
+  uConstrutorSQL in 'Outros\uConstrutorSQL.pas',
+  uAtributosCustomizados in 'Outros\uAtributosCustomizados.pas';
 
 {$R *.res}
 

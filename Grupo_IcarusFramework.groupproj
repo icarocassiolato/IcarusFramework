@@ -6,9 +6,6 @@
         <Projects Include="IcarusFramework.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Servidor\ServidorGenericoComAutenticacao.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Servidor\Visual\ServidorVisual.dproj">
             <Dependencies/>
         </Projects>
@@ -29,15 +26,6 @@
     <Target Name="IcarusFramework:Make">
         <MSBuild Projects="IcarusFramework.dproj" Targets="Make"/>
     </Target>
-    <Target Name="ServidorGenericoComAutenticacao">
-        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj"/>
-    </Target>
-    <Target Name="ServidorGenericoComAutenticacao:Clean">
-        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ServidorGenericoComAutenticacao:Make">
-        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj" Targets="Make"/>
-    </Target>
     <Target Name="ServidorVisual">
         <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj"/>
     </Target>
@@ -48,13 +36,13 @@
         <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="IcarusFramework;ServidorGenericoComAutenticacao;ServidorVisual"/>
+        <CallTarget Targets="IcarusFramework;ServidorVisual"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="IcarusFramework:Clean;ServidorGenericoComAutenticacao:Clean;ServidorVisual:Clean"/>
+        <CallTarget Targets="IcarusFramework:Clean;ServidorVisual:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="IcarusFramework:Make;ServidorGenericoComAutenticacao:Make;ServidorVisual:Make"/>
+        <CallTarget Targets="IcarusFramework:Make;ServidorVisual:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
