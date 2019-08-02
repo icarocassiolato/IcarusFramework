@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{4448CCA0-5D12-4394-99AD-CDE824BAC3DF}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="IcarusFramework.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Servidor\ServidorGenericoComAutenticacao.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Servidor\Visual\ServidorVisual.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="IcarusFramework">
+        <MSBuild Projects="IcarusFramework.dproj"/>
+    </Target>
+    <Target Name="IcarusFramework:Clean">
+        <MSBuild Projects="IcarusFramework.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="IcarusFramework:Make">
+        <MSBuild Projects="IcarusFramework.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ServidorGenericoComAutenticacao">
+        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj"/>
+    </Target>
+    <Target Name="ServidorGenericoComAutenticacao:Clean">
+        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ServidorGenericoComAutenticacao:Make">
+        <MSBuild Projects="Servidor\ServidorGenericoComAutenticacao.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ServidorVisual">
+        <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj"/>
+    </Target>
+    <Target Name="ServidorVisual:Clean">
+        <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ServidorVisual:Make">
+        <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="IcarusFramework;ServidorGenericoComAutenticacao;ServidorVisual"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="IcarusFramework:Clean;ServidorGenericoComAutenticacao:Clean;ServidorVisual:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="IcarusFramework:Make;ServidorGenericoComAutenticacao:Make;ServidorVisual:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
