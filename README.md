@@ -1,5 +1,5 @@
 # IcarusFramework
-Framework ORM criado por ícaro Cassiolato
+Framework ORM criado por Ícaro Cassiolato
 
 # Técnicas/padrões utilizadas
 
