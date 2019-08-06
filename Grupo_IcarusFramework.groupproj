@@ -18,13 +18,13 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="IcarusFramework">
-        <MSBuild Projects="IcarusFramework.dproj"/>
+        <MSBuild Projects="Cliente\IcarusFramework.dproj"/>
     </Target>
     <Target Name="IcarusFramework:Clean">
-        <MSBuild Projects="IcarusFramework.dproj" Targets="Clean"/>
+        <MSBuild Projects="Cliente\IcarusFramework.dproj" Targets="Clean"/>
     </Target>
     <Target Name="IcarusFramework:Make">
-        <MSBuild Projects="IcarusFramework.dproj" Targets="Make"/>
+        <MSBuild Projects="Cliente\IcarusFramework.dproj" Targets="Make"/>
     </Target>
     <Target Name="ServidorVisual">
         <MSBuild Projects="Servidor\Visual\ServidorVisual.dproj"/>

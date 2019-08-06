@@ -1,7 +1,7 @@
 object FrmServidor: TFrmServidor
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Servidor Icarus Framework'
   ClientHeight = 162
   ClientWidth = 246
   FormFactor.Width = 320

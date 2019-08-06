@@ -93,15 +93,15 @@
             <Form>PaiFrm</Form>
         </DCCReference>
         <DCCReference Include="Kernel\Controle\uPaiControle.pas"/>
-        <DCCReference Include="Outros\uConexaoBanco.pas"/>
-        <DCCReference Include="Outros\uLigacao.pas"/>
+        <DCCReference Include="Kernel\Outros\uConexaoBanco.pas"/>
+        <DCCReference Include="Kernel\Outros\uLigacao.pas"/>
         <DCCReference Include="Cadastros\Modelo\uUsuario.pas"/>
         <DCCReference Include="Cadastros\Modelo\uCidade.pas"/>
         <DCCReference Include="Cadastros\Modelo\uEstado.pas"/>
         <DCCReference Include="Cadastros\Visual\uUsuarioVisual.pas">
             <Form>UsuarioFrm</Form>
         </DCCReference>
-        <DCCReference Include="Outros\uConstrutorSQL.pas"/>
+        <DCCReference Include="Kernel\Outros\uConstrutorSQL.pas"/>
         <DCCReference Include="Outros\uAtributosCustomizados.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

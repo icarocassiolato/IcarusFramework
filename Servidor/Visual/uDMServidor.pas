@@ -34,6 +34,7 @@ implementation
 
 procedure TDMServidor.DataModuleCreate(Sender: TObject);
 begin
+  FDConnection.Params.LoadFromFile(ExtractFilePath(ParamStr(0))+'Config.ini');
   FDConnection.Open;
 end;
 

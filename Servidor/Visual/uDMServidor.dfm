@@ -1,6 +1,7 @@
 object DMServidor: TDMServidor
   OldCreateOrder = False
   OnCreate = DataModuleCreate
+  Encoding = esASCII
   Height = 150
   Width = 215
   object RESTDWPoolerDB: TRESTDWPoolerDB
@@ -24,10 +25,10 @@ object DMServidor: TDMServidor
   end
   object FDConnection: TFDConnection
     Params.Strings = (
-      'Database=C:\CARTEIRA.FDB'
+      'DriverID=FB'
       'User_Name=sysdba'
-      'Password=masterkey'
-      'DriverID=FB')
+      'Password=masterkey')
+    LoginPrompt = False
     Left = 40
     Top = 16
   end
