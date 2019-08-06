@@ -21,7 +21,7 @@ Generics
 Clean Code
 
 # Observações
-Na criação de uma nova classe, o nome da mesma tem que se necessariamente T+NomeDaTabela
+Na criação de uma nova classe, o nome da mesma tem que ser necessariamente T+NomeDaTabela
 ex.: TUsuario
 
 Nome do campo chave tem que se necessariamente ID+NomeDaTabela
