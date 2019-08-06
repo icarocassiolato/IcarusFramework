@@ -2,6 +2,7 @@
 Framework ORM criado por ícaro Cassiolato
 
 # Técnicas/padrões utilizadas
+
 Orientação a objetos
 Herança
 Singleton
