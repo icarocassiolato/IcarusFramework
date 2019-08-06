@@ -4,21 +4,13 @@ Framework ORM criado por ícaro Cassiolato
 # Técnicas/padrões utilizadas
 
 Orientação a objetos
-
 Herança
-
 Singleton
-
 Live Bindings
-
 RTTI
-
 REST (Rest DataWare)
-
 Attributes
-
 Generics
-
 Clean Code
 
 # Observações
