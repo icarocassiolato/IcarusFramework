@@ -30,6 +30,9 @@ ex.: IDUSUARIO
 Se for necessária a utilização dos seguintes eventos, guardar o conteúdo em uma variável global e fazer a chamada manualmente:
 
 AfterScroll
+
 BeforePost
+
 Qualquer TEdit.OnChangeTracking
+
 DataSource.StateChange
